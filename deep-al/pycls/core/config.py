@@ -79,6 +79,9 @@ _C.MODEL.NUM_CLASSES = 10
 # Loss function (see pycls/models/loss.py for options)
 _C.MODEL.LOSS_FUN = 'cross_entropy'
 
+# PENULTIMATE_ACTIVE (for feature extracion)
+_C.MODEL.PENULTIMATE_ACTIVE = False
+
 
 # ---------------------------------------------------------------------------- #
 # Batch norm options

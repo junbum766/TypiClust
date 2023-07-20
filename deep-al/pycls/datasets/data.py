@@ -12,7 +12,7 @@ from torch.utils.data.sampler import SubsetRandomSampler
 from .randaugment import RandAugmentPolicy
 from .simclr_augment import get_simclr_ops
 import pycls.utils.logging as lu
-from pycls.datasets.custom_datasets import CIFAR10, CIFAR100, MNIST, SVHN
+from pycls.datasets.custom_datasets import CIFAR10, CIFAR100, MNIST, SVHN, CIFAR10_custom
 from pycls.datasets.imbalanced_cifar import IMBALANCECIFAR10, IMBALANCECIFAR100
 from pycls.datasets.sampler import IndexedSequentialSampler
 from pycls.datasets.tiny_imagenet import TinyImageNet
@@ -202,18 +202,21 @@ class Data:
             preprocess_steps = test_preops_list
         preprocess_steps = transforms.Compose(preprocess_steps)
 
-        only_features = self.cfg.MODEL.LINEAR_FROM_FEATURES
+        # only_features = self.cfg.MODEL.LINEAR_FROM_FEATURES
 
         if self.dataset == "MNIST":
             mnist = MNIST(save_dir, train=isTrain, transform=preprocess_steps, test_transform=test_preprocess_steps, download=isDownload)
             return mnist, len(mnist)
 
         elif self.dataset == "CIFAR10":
-            cifar10 = CIFAR10(save_dir, train=isTrain, transform=preprocess_steps, test_transform=test_preprocess_steps, download=isDownload, only_features=only_features)
+            print('loading CIFAR10_custom dataset')
+            cifar10 = CIFAR10_custom(is_train=isTrain, transform=preprocess_steps, test_transform=test_preprocess_steps)
             return cifar10, len(cifar10)
+            # cifar10 = CIFAR10(save_dir, train=isTrain, transform=preprocess_steps, test_transform=test_preprocess_steps, download=isDownload)
+            # return cifar10, len(cifar10)
 
         elif self.dataset == "CIFAR100":
-            cifar100 = CIFAR100(save_dir, train=isTrain, transform=preprocess_steps,  test_transform=test_preprocess_steps, download=isDownload, only_features=only_features)
+            cifar100 = CIFAR100(is_train=isTrain, transform=preprocess_steps)
             return cifar100, len(cifar100)
 
         elif self.dataset == "SVHN":

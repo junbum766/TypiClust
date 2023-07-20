@@ -7,11 +7,12 @@ DATASET:
 MODEL:
   TYPE: resnet18
   NUM_CLASSES: 10
+  PENULTIMATE_ACTIVE: True
 TEST:
   SPLIT: test
-  BATCH_SIZE: 200
+  BATCH_SIZE: 1
   IM_SIZE: 32
-  MODEL_PATH: '/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/resnet18_sup/vlBest_acc_91_model_epoch_0186.pyth'
+  MODEL_PATH: '/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/resnet18_sup_2/vlBest_acc_91_model_epoch_0186.pyth'
 DATA_LOADER:
   NUM_WORKERS: 4
 CUDNN:

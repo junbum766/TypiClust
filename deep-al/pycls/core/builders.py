@@ -77,11 +77,11 @@ def get_loss_fun(cfg):
 
 def build_model(cfg):
     """Builds the model."""
-    if cfg.MODEL.LINEAR_FROM_FEATURES:
-        num_features = 384 if cfg.DATASET.NAME in ['IMAGENET50', 'IMAGENET100', 'IMAGENET200'] else 512
-        return FeaturesNet(num_features, cfg.MODEL.NUM_CLASSES)
+    # if cfg.MODEL.LINEAR_FROM_FEATURES:
+    #     num_features = 384 if cfg.DATASET.NAME in ['IMAGENET50', 'IMAGENET100', 'IMAGENET200'] else 512
+    #     return FeaturesNet(num_features, cfg.MODEL.NUM_CLASSES)
 
-    model = get_model(cfg)(num_classes=cfg.MODEL.NUM_CLASSES, use_dropout=True)
+    model = get_model(cfg)(num_classes=cfg.MODEL.NUM_CLASSES, use_dropout=True, penultimate_active=cfg.MODEL.PENULTIMATE_ACTIVE)
     if cfg.DATASET.NAME == 'MNIST':
         model.conv1 =  torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), padding=(3, 3), bias=False)
     

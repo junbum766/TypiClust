@@ -3,6 +3,42 @@ import torchvision
 from PIL import Image
 import numpy as np
 import pycls.datasets.utils as ds_utils
+from torch.utils.data import Dataset
+import glob
+import cv2
+
+
+class CIFAR10_custom(Dataset):
+    def __init__(self, is_train=True, transform=None, test_transform=None, only_features= False, path='/home/ubuntu/junbeom/data/cifar10/PT4AL'):
+        self.classes = 10 
+        self.is_train = is_train
+        self.transform = transform
+        self.only_features = only_features
+        self.no_aug = False
+        if self.is_train: # train
+            self.img_path = glob.glob('/home/ubuntu/junbeom/data/cifar10/PT4AL/train/*/*')
+        else:
+            self.img_path = glob.glob('/home/ubuntu/junbeom/data/cifar10/PT4AL/test/*/*')
+
+    def __len__(self):
+        return len(self.img_path)
+
+    def __getitem__(self, idx):
+        img = cv2.imread(self.img_path[idx])
+        img = Image.fromarray(img)
+        if self.only_features:
+            img = self.features[idx]
+        else:
+            if self.no_aug:
+                if self.test_transform is not None:
+                    img = self.test_transform(img)
+            else:
+                if self.transform is not None:
+                    img = self.transform(img)
+        label = int(self.img_path[idx].split('/')[-2])
+        image_index = int(self.img_path[idx].split('/')[-1].split('.')[0])
+
+        return img, label, image_index
 
 
 class CIFAR10(torchvision.datasets.CIFAR10):
@@ -11,7 +47,7 @@ class CIFAR10(torchvision.datasets.CIFAR10):
         self.test_transform = test_transform
         self.no_aug = False
         self.only_features = only_features
-        self.features = ds_utils.load_features("CIFAR10", train=train, normalized=False)
+        # self.features = ds_utils.load_features("CIFAR10", train=train, normalized=False) ###
 
 
     def __getitem__(self, index: int):
