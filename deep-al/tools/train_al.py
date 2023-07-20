@@ -75,7 +75,11 @@ def is_eval_epoch(cur_epoch):
 
 
 def main(cfg):
-
+    # Using specific GPU
+    os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+    # os.environ['NVIDIA_VISIBLE_DEVICES'] = str(cfg.GPU_ID)
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(cfg.GPU_ID)
+    
     # Setting up GPU args
     use_cuda = (cfg.NUM_GPUS > 0) and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
@@ -85,10 +89,12 @@ def main(cfg):
     if cfg.RNG_SEED is None:
         cfg.RNG_SEED = np.random.randint(100)
 
-    # Using specific GPU
-    # os.environ['NVIDIA_VISIBLE_DEVICES'] = str(cfg.GPU_ID)
-    # os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-    # print("Using GPU : {}.\n".format(cfg.GPU_ID))
+    
+    print("Using GPU : {}".format(cfg.GPU_ID))
+    print('Device:', device)
+    # print('Current cuda device:', torch.cuda.current_device())
+    # print('Count of using GPUs:', torch.cuda.device_count())
+    
 
     # Getting the output directory ready (default is "/output")
     cfg.OUT_DIR = os.path.join(os.path.abspath('../..'), cfg.OUT_DIR)
@@ -123,10 +129,10 @@ def main(cfg):
 
     # Dataset preparing steps
     print("\n======== PREPARING DATA AND MODEL ========\n")
-    cfg.DATASET.ROOT_DIR = os.path.join(os.path.abspath('../..'), cfg.DATASET.ROOT_DIR)
+    cfg.DATASET.ROOT_DIR = cfg.DATASET.ROOT_DIR # os.path.join(os.path.abspath('../..'), cfg.DATASET.ROOT_DIR)
     data_obj = Data(cfg)
-    train_data, train_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=True, isDownload=True)
-    test_data, test_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=False, isDownload=True)
+    train_data, train_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=True, isDownload=False)
+    test_data, test_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=False, isDownload=False)
     cfg.ACTIVE_LEARNING.INIT_L_RATIO = args.initial_size / train_size
     print("\nDataset {} Loaded Sucessfully.\nTotal Train Size: {} and Total Test Size: {}\n".format(cfg.DATASET.NAME, train_size, test_size))
     logger.info("Dataset {} Loaded Sucessfully. Total Train Size: {} and Total Test Size: {}\n".format(cfg.DATASET.NAME, train_size, test_size))
@@ -423,7 +429,7 @@ def train_epoch(train_loader, model, loss_fun, optimizer, train_meter, cur_epoch
     train_meter.iter_tic() #This basically notes the start time in timer class defined in utils/timer.py
 
     len_train_loader = len(train_loader)
-    for cur_iter, (inputs, labels) in enumerate(train_loader):
+    for cur_iter, (inputs, labels, image_index) in enumerate(train_loader):
         #ensuring that inputs are floatTensor as model weights are
         inputs = inputs.type(torch.cuda.FloatTensor)
         inputs, labels = inputs.cuda(), labels.cuda(non_blocking=True)
@@ -496,7 +502,7 @@ def test_epoch(test_loader, model, test_meter, cur_epoch):
     misclassifications = 0.
     totalSamples = 0.
 
-    for cur_iter, (inputs, labels) in enumerate(test_loader):
+    for cur_iter, (inputs, labels, image_index) in enumerate(test_loader):
         with torch.no_grad():
             # Transfer the data to the current GPU device
             inputs, labels = inputs.cuda(), labels.cuda(non_blocking=True)

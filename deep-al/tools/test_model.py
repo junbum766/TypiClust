@@ -14,7 +14,7 @@ def add_path(path):
     if path not in sys.path:
         sys.path.insert(0, path)
 
-add_path(os.path.abspath('../..'))
+add_path(os.path.abspath('..'))
 
 import pycls.core.builders as model_builder
 from pycls.core.config import cfg, dump_cfg
@@ -124,9 +124,9 @@ def main(cfg):
 
     # Dataset preparing steps
     print("\n======== PREPARING TEST DATA ========\n")
-    cfg.DATASET.ROOT_DIR = os.path.join(os.path.abspath('../..'), cfg.DATASET.ROOT_DIR)
+    cfg.DATASET.ROOT_DIR = cfg.DATASET.ROOT_DIR # os.path.join(os.path.abspath('../..'), cfg.DATASET.ROOT_DIR)
     data_obj = Data(cfg)
-    test_data, test_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=False, isDownload=True)
+    test_data, test_size = data_obj.getDataset(save_dir=cfg.DATASET.ROOT_DIR, isTrain=False, isDownload=False)
     
     print("\nDataset {} Loaded Sucessfully. Total Test Size: {}\n".format(cfg.DATASET.NAME, test_size))
     logger.info("Dataset {} Loaded Sucessfully. Total Test Size: {}\n".format(cfg.DATASET.NAME, test_size))
