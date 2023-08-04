@@ -9,16 +9,17 @@ import cv2
 
 
 class CIFAR10_custom(Dataset):
-    def __init__(self, is_train=True, transform=None, test_transform=None, only_features= False, path='/home/ubuntu/junbeom/data/cifar10/PT4AL'):
+    def __init__(self, is_train=True, transform=None, test_transform=None, only_features= False, path='/data/junbeom/data/cifar10/PT4AL'):
         self.classes = 10 
         self.is_train = is_train
         self.transform = transform
+        self.test_transform = test_transform
         self.only_features = only_features
         self.no_aug = False
         if self.is_train: # train
-            self.img_path = glob.glob('/home/ubuntu/junbeom/data/cifar10/PT4AL/train/*/*')
+            self.img_path = glob.glob('/data/junbeom/data/cifar10/PT4AL/train/*/*')
         else:
-            self.img_path = glob.glob('/home/ubuntu/junbeom/data/cifar10/PT4AL/test/*/*')
+            self.img_path = glob.glob('/data/junbeom/data/cifar10/PT4AL/test/*/*')
 
     def __len__(self):
         return len(self.img_path)

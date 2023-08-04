@@ -75,9 +75,12 @@ class ActiveLearning:
 
         elif self.cfg.ACTIVE_LEARNING.SAMPLING_FN.startswith("typiclust"):
             from .typiclust import TypiClust
+            oldmode = clf_model.training ###
+            clf_model.eval() ###
             is_scan = self.cfg.ACTIVE_LEARNING.SAMPLING_FN.endswith('dc')
-            tpc = TypiClust(self.cfg, lSet, uSet, budgetSize=self.cfg.ACTIVE_LEARNING.BUDGET_SIZE, is_scan=is_scan)
+            tpc = TypiClust(self.cfg, lSet, uSet, budgetSize=self.cfg.ACTIVE_LEARNING.BUDGET_SIZE, is_scan=is_scan,model=clf_model,dataset=trainDataset, dataObj=self.dataObj) ###
             activeSet, uSet = tpc.select_samples()
+            clf_model.train(oldmode) ###
 
         elif self.cfg.ACTIVE_LEARNING.SAMPLING_FN.lower() in ["prob_cover", 'probcover']:
             from .prob_cover import ProbCover

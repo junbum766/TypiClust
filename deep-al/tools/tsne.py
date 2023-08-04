@@ -20,9 +20,9 @@ with open('/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/resnet18_
 with open('/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/resnet18_trainset_feature_2/image_index.pkl', 'rb') as f : # image_index of features
     image_index = pkl.load(f)
 
-lSet_path = "/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/pt4al_budget1000_cycle1" #####
+lSet_path = "/home/ubuntu/junbeom/repo/TypiClust/output/CIFAR10/resnet18/pt4al_budget50_Atypicality_notUseMainLoss" #####
 
-labeled_dataset = np.load(lSet_path+"/lSet_5000.npy", allow_pickle=True) # labeled dataset path
+labeled_dataset = np.load(lSet_path+"/lSet.npy", allow_pickle=True) # labeled dataset path
 
 
 dim = 2
@@ -41,7 +41,7 @@ colors = plt.cm.rainbow(np.linspace(0, 1, class_num))
 for idx, feature in enumerate(tsne_result) :
     total = len(tsne_result)
     print(f'{idx+1}/{total}', end='\r')
-    if idx % 5 == 0: # 너무 오래 걸려서 10의 배수 번째만 그려보자..
+    if idx % 10 == 0: # 너무 오래 걸려서 10의 배수 번째만 그려보자..
         plt.scatter(feature[0], feature[1], c='grey', s=5, alpha=0.05)
     # plt.scatter(feature[0], feature[1], c=colors[labels[idx]].reshape(1, -1), s=5, alpha=0.1)
 
@@ -50,5 +50,5 @@ for idx, feature in enumerate(tsne_result) :
         print(idx, 'labeled')
 
 print('\n\n...saving... ')
-plt.savefig(lSet_path+'/feature_5cycle.png',dpi=300) # save feature t-SNE graph
+plt.savefig(lSet_path+'/feature.png',dpi=300) # save feature t-SNE graph
 print('...complete!')

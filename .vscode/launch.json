@@ -13,7 +13,7 @@
             "justMyCode": true,
             "cwd": "/home/ubuntu/junbeom/repo/TypiClust/deep-al/tools",
             // “module”: “torch.distributed.launch”,
-            "args": "--cfg /home/ubuntu/junbeom/repo/TypiClust/deep-al/configs/cifar10/feature_extraction/RESNET18.yaml"
+            "args": "--cfg /configs/cifar10/feature_extraction/RESNET18.yaml --cfg /home/ubuntu/junbeom/repo/TypiClust/deep-al/configs/cifar10/al/RESNET18.yaml --al typiclust_rp --exp-name simclr_budget1000_clustering_RandomSampling --initial_size 0 --budget 1000"
         }
     ]
 }

@@ -3,7 +3,7 @@ RNG_SEED: 1
 GPU_ID: '3'
 DATASET:
   NAME: CIFAR10 
-  ROOT_DIR: '/home/ubuntu/junbeom/data/cifar10'
+  ROOT_DIR: '/data/junbeom/data/cifar10'
 MODEL:
   TYPE: resnet18
   NUM_CLASSES: 10
